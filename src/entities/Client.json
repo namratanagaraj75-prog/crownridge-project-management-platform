@@ -1,0 +1,54 @@
+{
+  "name": "Client",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string",
+      "enum": [
+        "Technology",
+        "Healthcare",
+        "Finance",
+        "Education",
+        "Retail",
+        "Manufacturing",
+        "Real Estate",
+        "Media",
+        "Government",
+        "Other"
+      ]
+    },
+    "address": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Active", "Inactive", "Churned"],
+      "default": "Active"
+    },
+    "total_revenue": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Linked app user ID for portal access"
+    }
+  },
+  "required": ["name", "company", "email"]
+}

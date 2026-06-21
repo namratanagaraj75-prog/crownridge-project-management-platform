@@ -1,0 +1,196 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/₹(database)/documents/users/₹(request.auth.uid));
+    }
+
+    function userData() {
+      return userDoc().data;
+    }
+
+    function activeUser() {
+      return signedIn()
+        && exists(/databases/₹(database)/documents/users/₹(request.auth.uid))
+        && userData().status == 'active'
+        && userData().role is string;
+    }
+
+    function role() {
+      return userData().role;
+    }
+
+    function hasRole(roles) {
+      return activeUser() && role() in roles;
+    }
+
+    function isAdmin() {
+      return hasRole(['admin']);
+    }
+
+    function isProjectManager() {
+      return hasRole(['project_manager']);
+    }
+
+    function isAdminOrProjectManager() {
+      return hasRole(['admin', 'project_manager']);
+    }
+
+    function clientId() {
+      return userData().client_id;
+    }
+
+    function email() {
+      return request.auth.token.email;
+    }
+
+    function ownsClientRecord(data) {
+      return role() == 'client' && (
+        ('client_id' in data && data.client_id == clientId()) ||
+        ('clientId' in data && data.clientId == clientId()) ||
+        ('client_email' in data && data.client_email == email()) ||
+        ('clientEmail' in data && data.clientEmail == email()) ||
+        ('email' in data && data.email == email())
+      );
+    }
+
+    function isAssignedInternal(data) {
+      return (
+        ('assigned_user_ids' in data && request.auth.uid in data.assigned_user_ids) ||
+        ('assigned_users' in data && request.auth.uid in data.assigned_users) ||
+        ('team_member_ids' in data && request.auth.uid in data.team_member_ids) ||
+        ('developer_ids' in data && request.auth.uid in data.developer_ids) ||
+        ('qa_ids' in data && request.auth.uid in data.qa_ids) ||
+        ('tester_ids' in data && request.auth.uid in data.tester_ids) ||
+        ('assigned_to' in data && data.assigned_to == request.auth.uid) ||
+        ('developer_id' in data && data.developer_id == request.auth.uid) ||
+        ('qa_id' in data && data.qa_id == request.auth.uid) ||
+        ('tester_id' in data && data.tester_id == request.auth.uid) ||
+        ('user_id' in data && data.user_id == request.auth.uid)
+      );
+    }
+
+    function projectReadable(data) {
+      return isAdminOrProjectManager()
+        || (hasRole(['developer']) && isAssignedInternal(data))
+        || (hasRole(['qa']) && isAssignedInternal(data))
+        || (hasRole(['client']) && ownsClientRecord(data));
+    }
+
+    function sprintTaskReadable(data) {
+      return isAdminOrProjectManager()
+        || (hasRole(['developer', 'qa']) && isAssignedInternal(data));
+    }
+
+    function supportReadable(data) {
+      return isAdminOrProjectManager()
+        || hasRole(['support', 'qa'])
+        || (hasRole(['client']) && ownsClientRecord(data));
+    }
+
+    function timesheetOwner(data) {
+      return data.user_id == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow get: if activeUser() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /clients/{clientIdParam} {
+      allow read: if hasRole(['admin', 'project_manager', 'support'])
+        || (hasRole(['client']) && (clientIdParam == clientId() || ownsClientRecord(resource.data)));
+      allow create, update, delete: if isAdminOrProjectManager();
+    }
+
+    match /leads/{leadId} {
+      allow read, create, update, delete: if isAdminOrProjectManager();
+    }
+
+    match /projects/{projectId} {
+      allow read: if activeUser() && projectReadable(resource.data);
+      allow create, update, delete: if isAdminOrProjectManager();
+    }
+
+    match /sprints/{sprintId} {
+      allow read: if activeUser() && sprintTaskReadable(resource.data);
+      allow create, update, delete: if isAdminOrProjectManager();
+    }
+
+    match /tasks/{taskId} {
+      allow read: if activeUser() && sprintTaskReadable(resource.data);
+      allow create: if isAdminOrProjectManager()
+        || (hasRole(['developer', 'qa']) && isAssignedInternal(request.resource.data));
+      allow update: if isAdminOrProjectManager()
+        || (hasRole(['developer', 'qa']) && isAssignedInternal(resource.data) && isAssignedInternal(request.resource.data));
+      allow delete: if isAdminOrProjectManager()
+        || (hasRole(['developer', 'qa']) && isAssignedInternal(resource.data));
+    }
+
+    match /timesheets/{timesheetId} {
+      allow read: if isAdminOrProjectManager()
+        || (hasRole(['developer']) && timesheetOwner(resource.data));
+      allow create: if hasRole(['developer'])
+        && timesheetOwner(request.resource.data);
+      allow update: if isAdminOrProjectManager()
+        || (hasRole(['developer']) && timesheetOwner(resource.data) && timesheetOwner(request.resource.data));
+      allow delete: if isAdminOrProjectManager()
+        || (hasRole(['developer']) && timesheetOwner(resource.data));
+    }
+
+    match /supportTickets/{ticketId} {
+      allow read: if activeUser() && supportReadable(resource.data);
+      allow create: if hasRole(['admin', 'project_manager', 'support'])
+        || (hasRole(['client']) && ownsClientRecord(request.resource.data));
+      allow update: if hasRole(['admin', 'project_manager', 'support'])
+        || (hasRole(['client']) && ownsClientRecord(resource.data) && ownsClientRecord(request.resource.data));
+      allow delete: if isAdminOrProjectManager();
+    }
+
+    match /invoices/{invoiceId} {
+      allow read: if isAdminOrProjectManager()
+        || (hasRole(['client']) && ownsClientRecord(resource.data));
+      allow create, update, delete: if isAdminOrProjectManager();
+    }
+
+    match /amcContracts/{amcId} {
+      allow read: if isAdminOrProjectManager()
+        || (hasRole(['client']) && ownsClientRecord(resource.data));
+      allow create, update, delete: if isAdminOrProjectManager();
+    }
+
+    match /milestones/{milestoneId} {
+      allow read, create, update, delete: if isAdminOrProjectManager();
+    }
+
+    match /retainers/{retainerId} {
+      allow read, create, update, delete: if isAdminOrProjectManager();
+    }
+
+    match /notifications/{notificationId} {
+      allow read, write: if activeUser();
+    }
+
+    match /messages/{messageId} {
+      allow read, write: if isAdminOrProjectManager();
+    }
+
+    match /reports/{reportId} {
+      allow read, write: if isAdminOrProjectManager();
+    }
+
+    match /exports/{exportId} {
+      allow read, write: if isAdminOrProjectManager();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

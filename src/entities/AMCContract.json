@@ -1,0 +1,61 @@
+{
+  "name": "AMCContract",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "contract_number": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Active", "Expiring Soon", "Expired", "Renewed", "Cancelled"],
+      "default": "Active"
+    },
+    "coverage": {
+      "type": "string"
+    },
+    "support_hours": {
+      "type": "number"
+    },
+    "used_hours": {
+      "type": "number",
+      "default": 0
+    },
+    "renewal_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "client_id",
+    "contract_number",
+    "amount",
+    "start_date",
+    "end_date"
+  ]
+}

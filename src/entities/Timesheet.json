@@ -1,0 +1,47 @@
+{
+  "name": "Timesheet",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "task_title": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "hours": {
+      "type": "number"
+    },
+    "billable": {
+      "type": "boolean",
+      "default": true
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Draft", "Submitted", "Approved", "Rejected"],
+      "default": "Draft"
+    },
+    "approved_by": {
+      "type": "string"
+    }
+  },
+  "required": ["user_id", "project_id", "date", "hours"]
+}

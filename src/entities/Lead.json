@@ -1,0 +1,92 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Lead contact name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string",
+      "enum": [
+        "Technology",
+        "Healthcare",
+        "Finance",
+        "Education",
+        "Retail",
+        "Manufacturing",
+        "Real Estate",
+        "Media",
+        "Government",
+        "Other"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "Website",
+        "Referral",
+        "LinkedIn",
+        "Cold Call",
+        "Email Campaign",
+        "Event",
+        "Partner",
+        "Other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "New",
+        "Contacted",
+        "Qualified",
+        "Proposal Sent",
+        "Negotiation",
+        "Won",
+        "Lost"
+      ],
+      "default": "New"
+    },
+    "score": {
+      "type": "number",
+      "default": 0,
+      "description": "Lead score 0-100"
+    },
+    "budget": {
+      "type": "number"
+    },
+    "urgency": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High", "Critical"],
+      "default": "Medium"
+    },
+    "opportunity_value": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Sales rep user ID"
+    },
+    "converted": {
+      "type": "boolean",
+      "default": false
+    },
+    "converted_client_id": {
+      "type": "string"
+    }
+  },
+  "required": ["name", "email", "company"]
+}

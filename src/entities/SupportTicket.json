@@ -1,0 +1,65 @@
+{
+  "name": "SupportTicket",
+  "type": "object",
+  "properties": {
+    "ticket_number": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High", "Critical"],
+      "default": "Medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Open",
+        "In Progress",
+        "Waiting on Client",
+        "Resolved",
+        "Closed"
+      ],
+      "default": "Open"
+    },
+    "assigned_to": {
+      "type": "string"
+    },
+    "assigned_to_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["Bug", "Feature Request", "Support", "Question", "Incident"]
+    },
+    "resolution": {
+      "type": "string"
+    },
+    "sla_due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "resolved_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": ["title", "description", "client_id"]
+}

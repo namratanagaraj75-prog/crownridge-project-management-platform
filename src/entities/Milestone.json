@@ -1,0 +1,38 @@
+{
+  "name": "Milestone",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Pending", "In Progress", "Completed", "Invoiced", "Paid"],
+      "default": "Pending"
+    },
+    "completion_percentage": {
+      "type": "number",
+      "default": 0
+    },
+    "payment_trigger": {
+      "type": "string"
+    }
+  },
+  "required": ["project_id", "title", "amount"]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "sprint_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Backlog",
+        "To Do",
+        "In Progress",
+        "In Review",
+        "Testing",
+        "Done"
+      ],
+      "default": "Backlog"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High", "Critical"],
+      "default": "Medium"
+    },
+    "assigned_to": {
+      "type": "string"
+    },
+    "assigned_to_name": {
+      "type": "string"
+    },
+    "story_points": {
+      "type": "number",
+      "default": 0
+    },
+    "completion_percent": {
+      "type": "number",
+      "default": 0
+    },
+    "estimated_hours": {
+      "type": "number"
+    },
+    "actual_hours": {
+      "type": "number",
+      "default": 0
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "tags": {
+      "type": "string"
+    }
+  },
+  "required": ["project_id", "title"]
+}

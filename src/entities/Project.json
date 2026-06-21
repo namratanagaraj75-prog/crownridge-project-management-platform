@@ -1,0 +1,74 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Planning",
+        "In Progress",
+        "Review",
+        "Testing",
+        "Completed",
+        "On Hold",
+        "Cancelled"
+      ],
+      "default": "Planning"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High", "Critical"],
+      "default": "Medium"
+    },
+    "billing_type": {
+      "type": "string",
+      "enum": ["Fixed Milestone", "Monthly Retainer", "Hourly"],
+      "default": "Fixed Milestone"
+    },
+    "budget": {
+      "type": "number"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "deliverables": {
+      "type": "string"
+    },
+    "project_manager": {
+      "type": "string"
+    },
+    "tech_lead": {
+      "type": "string"
+    },
+    "team_members": {
+      "type": "string",
+      "description": "Comma-separated user IDs"
+    },
+    "progress": {
+      "type": "number",
+      "default": 0,
+      "description": "0-100"
+    }
+  },
+  "required": ["name", "client_id", "client_name"]
+}
