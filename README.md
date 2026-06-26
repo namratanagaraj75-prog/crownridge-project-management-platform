@@ -248,6 +248,15 @@ Completed
 
 WEBSITE LOGIN:https://crownridge-project-management-platf.vercel.app
 
+    EMAIL AND PASSWORD TO LOGIN 
+    
+1.ADMIN = admin@crownridge.com =123456
+2.MANAGER = manager@crownridge.com = 789012
+3.DEVELOPER = developer@crownridge.com = 2442007
+4.QA Engineer= qa@crownridge.com = 199524
+5.SUPPORT TEAM = support@crownridge.com = 200724
+6.CLIENT = client@crownridge.com = 198524
+
 Author
 Namrata N. S
 B.Tech CSE (Data Engineering & Generative AI)
