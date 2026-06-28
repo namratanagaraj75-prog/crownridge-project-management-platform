@@ -58,6 +58,20 @@ const STATUSES = [
 ];
 const PRIORITIES = ["Low", "Medium", "High", "Critical"];
 const BILLING_TYPES = ["Fixed Milestone", "Monthly Retainer", "Hourly"];
+const CATEGORIES = [
+  "AI & Data Science",
+  "Enterprise Software",
+  "Healthcare Tech",
+  "Logistics & Supply Chain",
+  "E-Commerce",
+  "HR & Payroll",
+  "EdTech",
+  "FinTech",
+  "Support Systems",
+  "Business Intelligence",
+  "Consulting",
+  "Other"
+];
 const emptyProject = {
   name: "",
   client_id: "",
@@ -72,6 +86,9 @@ const emptyProject = {
   scope: "",
   deliverables: "",
   progress: 0,
+  category: "Other",
+  client_email: "",
+  client_industry: "",
 };
 
 // Real project update email sender helper
@@ -246,6 +263,9 @@ export default function Projects() {
       scope: p.scope || "",
       deliverables: p.deliverables || "",
       progress: p.progress || 0,
+      category: p.category || "Other",
+      client_email: p.client_email || "",
+      client_industry: p.client_industry || "",
     });
     setEditingId(p.id);
     setDialogOpen(true);
@@ -376,10 +396,16 @@ export default function Projects() {
                   </div>
                   <StatusBadge status={p.status} />
                 </div>
-                <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground flex-wrap">
                   <StatusBadge status={p.priority} />
                   <span>·</span>
                   <span>{p.billing_type}</span>
+                  {p.category && (
+                    <>
+                      <span>·</span>
+                      <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-medium">{p.category}</span>
+                    </>
+                  )}
                 </div>
                 {p.budget && (
                   <p className="text-xs text-muted-foreground mb-2">
@@ -457,6 +483,11 @@ export default function Projects() {
                     <p className="text-xs text-muted-foreground">
                       {p.client_name}
                     </p>
+                    {p.category && (
+                      <div className="mt-1">
+                        <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded text-[9px] font-medium">{p.category}</span>
+                      </div>
+                    )}
                     <div className="flex items-center justify-between mt-2">
                       <StatusBadge status={p.priority} />
                       <span className="text-xs text-muted-foreground">
@@ -491,9 +522,16 @@ export default function Projects() {
                 clients={clients}
                 value={form.client_id}
                 displayName={form.client_name}
-                onValueChange={({ client_id, client_name }) =>
-                  setForm({ ...form, client_id, client_name })
-                }
+                onValueChange={({ client_id, client_name }) => {
+                  const client = clients.find((c) => c.id === client_id);
+                  setForm({
+                    ...form,
+                    client_id,
+                    client_name,
+                    client_email: client?.email || "",
+                    client_industry: client?.industry || "Other"
+                  });
+                }}
                 required
               />
               <div>
@@ -514,6 +552,25 @@ export default function Projects() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            <div>
+              <Label>Category</Label>
+              <Select
+                value={form.category}
+                onValueChange={(v) => setForm({ ...form, category: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div>

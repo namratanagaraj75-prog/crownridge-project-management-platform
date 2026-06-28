@@ -1,0 +1,46 @@
+{
+  "name": "HourlyLog",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "member_id": {
+      "type": "string"
+    },
+    "member_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "hours": {
+      "type": "number"
+    },
+    "rate": {
+      "type": "number"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Captured", "Invoiced"],
+      "default": "Captured"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    }
+  },
+  "required": ["date", "project_id", "member_id", "hours", "rate"]
+}

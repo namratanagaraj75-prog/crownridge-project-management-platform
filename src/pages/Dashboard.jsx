@@ -166,6 +166,16 @@ export default function Dashboard() {
             )
           : Promise.resolve(emptySnap);
       const notificationsPromise = getDocs(collection(db, "notifications"));
+      const hourlyLogsPromise = isAdminOrPm
+        ? getDocs(collection(db, "hourlyLogs"))
+        : isClient
+          ? getDocs(
+              query(
+                collection(db, "hourlyLogs"),
+                where("clientId", "==", clientId),
+              ),
+            )
+          : Promise.resolve(emptySnap);
 
       const [
         projects,
@@ -178,6 +188,7 @@ export default function Dashboard() {
         timesheetSnap,
         retainersSnap,
         notificationsSnap,
+        hourlyLogsSnap,
       ] = await Promise.all([
         projectsPromise,
         clientsPromise,
@@ -189,6 +200,7 @@ export default function Dashboard() {
         timesheetPromise,
         retainersPromise,
         notificationsPromise,
+        hourlyLogsPromise,
       ]);
 
       const clients = mapSnap(clientsSnap);
@@ -212,6 +224,7 @@ export default function Dashboard() {
       const amcs = mapSnap(amcSnap);
       const timesheets = mapSnap(timesheetSnap);
       const retainers = mapSnap(retainersSnap);
+      const hourlyLogs = mapSnap(hourlyLogsSnap);
       let notificationsRaw = mapSnap(notificationsSnap);
 
       const totalRevenue = invoices.reduce(
@@ -249,10 +262,15 @@ export default function Dashboard() {
         },
       ];
 
-      const billableHours = timesheets.reduce(
+      const timesheetHours = timesheets.reduce(
         (sum, t) => sum + (Number(t.hours) || 0),
         0,
       );
+      const hourlyHours = hourlyLogs.reduce(
+        (sum, hl) => sum + (Number(hl.hours) || 0),
+        0,
+      );
+      const billableHours = timesheetHours + hourlyHours;
 
       const clientEmail = userProfile?.email || "";
 

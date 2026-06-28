@@ -68,6 +68,15 @@
       "type": "number",
       "default": 0,
       "description": "0-100"
+    },
+    "category": {
+      "type": "string"
+    },
+    "client_email": {
+      "type": "string"
+    },
+    "client_industry": {
+      "type": "string"
     }
   },
   "required": ["name", "client_id", "client_name"]

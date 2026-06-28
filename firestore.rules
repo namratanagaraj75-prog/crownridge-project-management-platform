@@ -172,6 +172,10 @@ service cloud.firestore {
       allow read, create, update, delete: if isAdminOrProjectManager();
     }
 
+    match /hourlyLogs/{hourlyLogId} {
+      allow read, create, update, delete: if isAdminOrProjectManager();
+    }
+
     match /notifications/{notificationId} {
       allow read, write: if activeUser();
     }

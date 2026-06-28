@@ -40,6 +40,7 @@ export async function seedAllDemoData(currentUserUid, currentUserName = "Admin P
     "amcContracts",
     "messages",
     "notifications",
+    "hourlyLogs",
   ];
 
   console.log("Cleaning database collections...");
@@ -90,16 +91,16 @@ export async function seedAllDemoData(currentUserUid, currentUserName = "Admin P
   ];
 
   const projectDetails = [
-    { billing_type: "Fixed Milestone", budget: 45000, progress: 85, status: "Review", priority: "High", desc: "AI-driven analytics dashboard mapping real-time enterprise sales metrics." },
-    { billing_type: "Monthly Retainer", budget: 60000, progress: 60, status: "In Progress", priority: "Medium", desc: "Custom CRM architecture handling pipeline flows and custom lead qualification dashboards." },
-    { billing_type: "Fixed Milestone", budget: 75000, progress: 95, status: "Testing", priority: "Critical", desc: "HIPAA-compliant online consultation and records vault client dashboard." },
-    { billing_type: "Fixed Milestone", budget: 35000, progress: 100, status: "Completed", priority: "Medium", desc: "Stock levels alerting, QR code barcode scanner integration module." },
-    { billing_type: "Hourly", budget: 40000, progress: 40, status: "In Progress", priority: "High", desc: "B2B shop portal complete with Stripe payment infrastructure and orders engine." },
-    { billing_type: "Monthly Retainer", budget: 50000, progress: 75, status: "In Progress", priority: "Low", desc: "Timesheets tracking, candidate recruitment pipeline, and salaries ledger." },
-    { billing_type: "Fixed Milestone", budget: 85000, progress: 20, status: "Planning", priority: "High", desc: "Comprehensive management system for student databases, fee receipts, and marks registers." },
-    { billing_type: "Monthly Retainer", budget: 55000, progress: 90, status: "Review", priority: "Critical", desc: "Subscription invoicing ledger engine, multi-currency VAT ledger controller." },
-    { billing_type: "Hourly", budget: 30000, progress: 100, status: "Completed", priority: "Medium", desc: "Helpdesk ticket automation with priority routing." },
-    { billing_type: "Fixed Milestone", budget: 65000, progress: 10, status: "Planning", priority: "Low", desc: "Analytics board linking multiple client SQL data nodes for live queries." },
+    { billing_type: "Fixed Milestone", budget: 45000, progress: 85, status: "Review", priority: "High", desc: "AI-driven analytics dashboard mapping real-time enterprise sales metrics.", category: "AI & Data Science" },
+    { billing_type: "Monthly Retainer", budget: 60000, progress: 60, status: "In Progress", priority: "Medium", desc: "Custom CRM architecture handling pipeline flows and custom lead qualification dashboards.", category: "Enterprise Software" },
+    { billing_type: "Fixed Milestone", budget: 75000, progress: 95, status: "Testing", priority: "Critical", desc: "HIPAA-compliant online consultation and records vault client dashboard.", category: "Healthcare Tech" },
+    { billing_type: "Fixed Milestone", budget: 35000, progress: 100, status: "Completed", priority: "Medium", desc: "Stock levels alerting, QR code barcode scanner integration module.", category: "Logistics & Supply Chain" },
+    { billing_type: "Hourly", budget: 40000, progress: 40, status: "In Progress", priority: "High", desc: "B2B shop portal complete with Stripe payment infrastructure and orders engine.", category: "E-Commerce" },
+    { billing_type: "Monthly Retainer", budget: 50000, progress: 75, status: "In Progress", priority: "Low", desc: "Timesheets tracking, candidate recruitment pipeline, and salaries ledger.", category: "HR & Payroll" },
+    { billing_type: "Fixed Milestone", budget: 85000, progress: 20, status: "Planning", priority: "High", desc: "Comprehensive management system for student databases, fee receipts, and marks registers.", category: "EdTech" },
+    { billing_type: "Monthly Retainer", budget: 55000, progress: 90, status: "Review", priority: "Critical", desc: "Subscription invoicing ledger engine, multi-currency VAT ledger controller.", category: "FinTech" },
+    { billing_type: "Hourly", budget: 30000, progress: 100, status: "Completed", priority: "Medium", desc: "Helpdesk ticket automation with priority routing.", category: "Support Systems" },
+    { billing_type: "Fixed Milestone", budget: 65000, progress: 10, status: "Planning", priority: "Low", desc: "Analytics board linking multiple client SQL data nodes for live queries.", category: "Business Intelligence" },
   ];
 
   console.log("Seeding projects...");
@@ -122,6 +123,9 @@ export async function seedAllDemoData(currentUserUid, currentUserName = "Admin P
       project_manager: currentUserUid,
       tech_lead: "developer_member_id",
       team_members: currentUserUid + ",developer_member_id",
+      category: details.category,
+      client_email: client.email,
+      client_industry: client.industry || "Technology",
       createdAt: serverTimestamp(),
     });
     projectIds.push({ id: docRef.id, name: projectNames[i], clientId: client.id, clientCompany: client.company, clientEmail: client.email, clientPhone: client.phone, budget: details.budget });
@@ -437,6 +441,43 @@ export async function seedAllDemoData(currentUserUid, currentUserName = "Admin P
       used_hours: 5 + i * 3,
       notes: `Annual maintenance contract for project ${project.name}. Coverage: ${amcCoverage[i]}. Value: ₹${amount.toLocaleString()}/year.`,
       createdAt: serverTimestamp(),
+    });
+  }
+
+  // 12. 10 HOURLY LOGS
+  const hourlyLogData = [
+    { projectIndex: 0, member: "Rahul Sharma", dateOffset: 2, hours: 4, rate: 1500, desc: "Initial client consultation and space planning layout discussion", status: "Captured" },
+    { projectIndex: 1, member: "Priya Nair", dateOffset: 3, hours: 6, rate: 1200, desc: "Site measurement and material catalog review with client", status: "Captured" },
+    { projectIndex: 2, member: "Karthik Rao", dateOffset: 5, hours: 8, rate: 2500, desc: "3D rendering design development and workspace partition plans", status: "Invoiced" },
+    { projectIndex: 3, member: "Sneha Reddy", dateOffset: 6, hours: 5, rate: 1800, desc: "Floor plan revision based on structural and electrical feedback", status: "Captured" },
+    { projectIndex: 4, member: "Arjun Mehta", dateOffset: 8, hours: 3.5, rate: 1000, desc: "Furniture selection and layout styling recommendations", status: "Captured" },
+    { projectIndex: 5, member: "Rahul Sharma", dateOffset: 9, hours: 5.5, rate: 1500, desc: "Lighting design layout and false ceiling detailing plan", status: "Captured" },
+    { projectIndex: 6, member: "Priya Nair", dateOffset: 11, hours: 7, rate: 1200, desc: "Material estimation and bill of quantities prep for procurement", status: "Invoiced" },
+    { projectIndex: 7, member: "Karthik Rao", dateOffset: 12, hours: 4, rate: 3000, desc: "Client meeting and theme presentation with sample board", status: "Captured" },
+    { projectIndex: 8, member: "Sneha Reddy", dateOffset: 14, hours: 5, rate: 1600, desc: "Electrical layout planning and plumbing outlet positioning", status: "Captured" },
+    { projectIndex: 9, member: "Arjun Mehta", dateOffset: 15, hours: 6, rate: 2200, desc: "Final design presentation and project schedule sign-off", status: "Captured" },
+  ];
+
+  console.log("Seeding hourly logs...");
+  for (const log of hourlyLogData) {
+    const project = projectIds[log.projectIndex];
+    const amount = log.hours * log.rate;
+    await addDoc(collection(db, "hourlyLogs"), {
+      projectId: project.id,
+      projectName: project.name,
+      clientId: project.clientId,
+      clientName: project.clientCompany,
+      member: log.member,
+      date: moment().subtract(log.dateOffset, "days").format("YYYY-MM-DD"),
+      hours: log.hours,
+      rate: log.rate,
+      amount: amount,
+      description: log.desc,
+      status: log.status,
+      notes: "Demo hourly log seeded automatically.",
+      invoiceId: "",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
     });
   }
 
